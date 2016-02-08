@@ -1,17 +1,99 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+/*
+ * findWord.cpp
+ *
+ *  Created on: Dec 7, 2014
+ *      Author: mengqi
+ */
+#include <stdio.h>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <cstring>
+using namespace std;
+char a[1024];
+char *hehe;
+char* firstSeThirdMatch(char *word, char *string1)
+{
 
-# Custom for Visual Studio
-*.cs     diff=csharp
 
-# Standard to msysgit
-*.doc	 diff=astextplain
-*.DOC	 diff=astextplain
-*.docx diff=astextplain
-*.DOCX diff=astextplain
-*.dot  diff=astextplain
-*.DOT  diff=astextplain
-*.pdf  diff=astextplain
-*.PDF	 diff=astextplain
-*.rtf	 diff=astextplain
-*.RTF	 diff=astextplain
+	   int i=0;
+	   bool go =true;
+
+	   while(i<std::char_traits<char>::length(string1)&&go)
+	   {
+	      if(word[0]==string1[i])
+	      {
+
+	    	       go=false;
+	    	       return (string1+i);
+	      }
+	      i++;
+	   }
+
+	   return string1;
+}
+bool checkEqual(char *word, char *string1, int length)
+{
+
+
+
+     if(length ==0)
+      {
+    	  return true;
+      }
+      else
+      {
+
+    	  if(word[0]==string1[0])
+    	  {
+    		 return checkEqual((word+1),(string1+1),length-1);
+    	  }
+      }
+
+   return false;
+}
+
+int main(int argc, char *argv[])
+{
+	if(argc!=3)
+	{
+		cout<<"Proper usage: findWord <word> <file>"<<endl;
+		cout<<"where"<<endl;
+		cout<<"<word> is a sequence of non-whitespace characters"<<endl;
+		cout<<"<file> is the file in which to search for the word"<<endl;
+		return 1;
+	}
+	ifstream infile(argv[2]);
+
+	if (!infile) {
+			cerr << "the given file is invalid or missing" << endl;
+			return 1;
+		}
+	else{
+		cout<<"Searching for '"<<argv[1]<<"’ in file '"<<argv[2]<<"’"<<endl;
+	char *word=argv[1];
+	int count =0;
+	string line;
+	int lineNumber=0;
+	while (!getline(infile, line).eof())
+	{
+		strcpy(a, line.c_str());
+		if(checkEqual(argv[1],firstSeThirdMatch(argv[1],a),line.length()))
+		{
+			cout<<lineNumber;
+			cout<<a<<endl;
+			count++;
+
+		}
+		lineNumber++;
+
+	}
+	if(count==0)
+	{
+		cout<<"occurrences of '"<<argv[2]<<"’ = 0"<<endl;
+	}
+
+	}
+	return 0;
+	}
+
